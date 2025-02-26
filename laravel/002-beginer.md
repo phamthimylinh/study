@@ -280,4 +280,22 @@ if ($_FILES['uploadedFile']['error'] == 0) {
 - Chỉ cho phép các định dạng an toàn (JPG, PNG, etc.).
 
 ## 🔥4. Xử lý lỗi và debug trong PHP
+PHP cos nhiều loại lỗi:
+- **Notice**: Cảnh báo nhẹ, không làm dừng chương trình.
+- **Warning**: Cảnh báo quan trọng hơn, nhưng không dừng chương trình.
+- **Fatal Error**: Lỗi nghiêm trọng làm dừng chương trình.
+#### Bật chế độ debug
+```php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+```
+### Ví dụ lỗi phổ biến
+```php
+<?php
+echo $undefinedVariable;// Lỗi biến chưa được định nghĩa
+
+// fix lỗi -> Kiểm tra biến trước khi dùng
+if(isset($undefinedVariable)) {...}
+?>
+```
 
