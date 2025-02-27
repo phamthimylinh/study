@@ -299,3 +299,6 @@ if(isset($undefinedVariable)) {...}
 ?>
 ```
 
+# C - 1.3 Cơ sở dữ liệu MySQL
+## 1.3.1 - Cài đặt MySQL, phpMyAdmin
+MySQL: Là một hệ quản trị cơ sở dữ liệu quan hệ (RDBMS - Relational Database Management System) mã nguồn mở, được sử dụng để lưu trữ, quản lý và truy xuất dữ liệu. Ví dụ: thông tin user, bài viết, sản phẩm trong một ứng dụng.
