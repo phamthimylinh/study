@@ -301,4 +301,21 @@ if(isset($undefinedVariable)) {...}
 
 # C - 1.3 Cơ sở dữ liệu MySQL
 ## 1.3.1 - Cài đặt MySQL, phpMyAdmin
-MySQL: Là một hệ quản trị cơ sở dữ liệu quan hệ (RDBMS - Relational Database Management System) mã nguồn mở, được sử dụng để lưu trữ, quản lý và truy xuất dữ liệu. Ví dụ: thông tin user, bài viết, sản phẩm trong một ứng dụng.
+- **SQL**: Là một hệ quản trị cơ sở dữ liệu quan hệ (RDBMS - Relational Database Management System) mã nguồi mở, đượ sử dụng để lưu trữ, quản lý và truy xuất dữ liệu. Ví dụ: thông tin user, bài viết trong một ứng dụng.
+
+-**phpMyAdmin**: Là một công cụ dựa trên giao diện web, viết bằng PHP, giúp bạn quản lý cơ sở dữ liệu MySQL thông qua trình duyệt mà không cần dùng lệnh SQL trực tiếp( dù bạn có thể dùng SQL nếu muốn).
+
+### Bản chất MySQL
+- Bản chất là một phần mềm chạy trên máy tính (server), hoạt động như một "người quản lý" lưu trữ dữ liệu trong các bảng (tables) có cấu trúc rõ ràng (cột và hàng).
+- Dữ liệu được tổ chức theo dạng quan hệ, nghĩa là các bảng có thể liên kết với nhau qua các khóa (keys).
+- Nó hiểu và thực thi lệnh SQL (Structured Query Language) để bạn thêm, sửa, xóa lấy dữ liệu.
+
+### Tại sao lại cần MySql?
+- Trong ứng dụng web (như Laravel), bạn cần nơi lưu trữ dữ liệu lâu dài (presistent storage). MySQL giúp lưu trữ thông tin như tài khoản người dùng, bài viết, đơn hàng một cách có tổ chức, dễ truy vấn.
+- Nó nhanh, đáng tin cậy, hỗ trợ nhiều người dùng truy cập cùng lúc, rất phổ biến trong lập trình web.
+
+### Lưu ý
+- Port mysql mặc định dùng cổng 3306
+- Nhớ đặt mật khẩu cho root
+- Phiên bản dùng ổn định (8.0), tránh bản quá cũ 5.5 vì thiếu tính năng mới.
+
