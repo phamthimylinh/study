@@ -319,3 +319,115 @@ if(isset($undefinedVariable)) {...}
 - Nhớ đặt mật khẩu cho root
 - Phiên bản dùng ổn định (8.0), tránh bản quá cũ 5.5 vì thiếu tính năng mới.
 
+## 1.3.2 - CRUD trong MySQL
+CRUD là viest tắt của Create (tạo), Read (đọc), Update (cập nhật), Delete (xóa). Đây là 4 thao tác cơ bản nhất với csdl.
+
+### CREATE - Tạo mới dữ liệu
+```sql
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    email VARCHAR(100) UNIQUE,
+    age INT
+);
+
+-- Thêm dữ liệu vào bảng
+INSERT INTO users (name, email, age)
+VALUES ('Nguyen Van A', 'vana@gmail.com', 25);
+```
+
+### READ - Đọc dữ liệu
+```sql
+-- Đọc tất cả dữ liệu
+SELECT * FROM users;
+
+-- Đọc có điều kiện
+SELECT * FROM users WHERE age > 18;
+
+-- Đọc và sắp xếp
+SELECT * FROM users ORDER BY name ASC;
+```
+
+### UPDATE - Cập nhật dữ liệu
+```sql
+-- Cập nhật 1 bản ghi
+UPDATE users
+SET age = 26
+WHERE id = 1;
+
+-- Cập nhật nhiều bản ghi
+UPDATE users
+SET status = 'active'
+WHERE age >= 18;
+```
+
+### DELETE - Xóa dữ liệu
+```sql
+-- Xóa 1 bản ghi
+DELETE FROM users WHERE id = 1;
+
+-- Xóa nhiều bản ghi
+DELETE FROM users WHERE age < 18;
+```
+
+## 1.3.3 - Các mối quan hệ trong MySQL
+### Quan hện 1-1 (One-to-One)
+Ví dụ: Một người chỉ có một CMND, và một CMND chỉ thuộc về một người.
+```sql
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+);
+
+CREATE TABLE identity_cards (
+    id INT PRIMARY KEY AUTO_INCREAMENT,
+    number VARCHAR(12),
+    user_id INT UNIQUE,
+    FOREIGN KEY (user_id) REFERENCES users(id
+)
+```
+
+### Quan hệ 1-n (One-to-Many)
+Ví dụ: Một người có thể viết nhiều bài post, nhưng mỗi bài post chỉ thuộc về một người.
+```sql
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREAMENT,
+    name VARCHAR(100),
+);
+
+CREATE TABLE posts (
+    id INT PRIMARY KEY AUTO_INCREAMENT,
+    title VARCHAR(100),
+    content TEXT,
+    user_id INT,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+```
+
+### Quan hệ n-n (Many-to-Many)
+Ví dụ: Một học sinh có thể học nhiều môn học, và một môn học có thể có nhiều học sinh
+```sql
+CREATE TABLE students (
+    id INT PRIMARY KEY AUTO_INCREAMENT,
+    name VARCHAR(100),
+);
+
+CREATE TABLE subjects (
+    id INT PRIMARY KEY AUTO_INCREAMENT,
+    name VARCHAR(100),
+)
+
+-- Bảng trung gian
+CREATE TABLE student_subject (
+    student_id INT,
+    subject_id INT,
+    score FLOAT,
+    PRIMARY KEY (student_id, subject_id),
+    FOREIGN KEY (student_id) REFERENCES students(id),
+    FOREIGN KEY (subject_id) REFERENCES subjects(id)
+);
+```
+### Lưu ý
+- Khóa ngoại luôn đặt ở bảng "nhiều"
+- FOREIGN KEY luôn tham chiếu đến PRIMARY KEY
+
