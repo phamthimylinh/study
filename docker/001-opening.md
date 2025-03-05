@@ -44,6 +44,7 @@ Praise for the first edition
 # Foreword - read done
 
 # Preface
+Docker and the container community have come a long way since we started partici-pating in 2013. And docker has changed in some unexpected ways since 2016, when jeff released the first edition of this book. Thankfully, most of the user-facing inter-faces and core concepts were maintained in a backward-compatible manner. The first two-thirds of the book needed updates only for additional feature or closed issues. As anticipated, part 3 of the previous edition needed a full rewrite. Since publication of the previous book, we've seen progress in orchestration, app connectivity, proprietary cloud container offerings, multicontainer app packaging, and functions-as-a-serice platforms. this edition focuses on the fundamental concepts and practices for using Docker containers and steers clear of rapidly changing technologies that comple-ment Docker.
 
 
 
