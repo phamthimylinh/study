@@ -63,3 +63,9 @@ Là "thùng chứa" chạy ứng dụng. Mỗi container được tạo ra từ 
 - Là kho lưu trữ image. Docker hub là registry phổ biến nhất, nơi bạn tài hoặc đẩy image lên.
 - Ví dụ: `docker pull ubuntu` tài image Ubuntu từ Docker hub.
 - **Hình dung**: Image giống như file cài đặt game (setup.exe), container là game đang chạy, còn registry là nơi bạn tài file đó.
+
+## 1.4 Cài đặt docker
+Để cài đặt trên window
+- Cài đặt docker desktop từ trang chủ docker.com
+- Cài đặt theo hướng dẫn (cần bật virtualization trong BIOS nếu dùng Windows)
+- Mở terminal, chạy lệnh `docker --version`.
