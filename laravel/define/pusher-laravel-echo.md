@@ -22,7 +22,7 @@ Broadcasting (phát sóng sự kiện) trong Laravel là cơ chế cho phép Lar
 
 # 5. Flow và các thành phần tham gia vào hệ thống real-time
 1. Laravel:(BE)
-Nơi sinh ra sự kiện (event), xử lý logic và "phát sócng" ra ngoài
+Nơi sinh ra sự kiện (event), xử lý logic và "phát sóng" ra ngoài
 
 2. Broadcasting:(BE)
 Cơ chế Laravel dùng để phát sóng sự kiện ra ngoài
@@ -32,3 +32,7 @@ Dịch vụ trung gian gửi sự kiện từ laravel đến trình duyệt (qua
 
 4. Laravel Echo: (FE)
 Thư viện Javascript ở frontend, nghe các sự kiện được Pusher gửi đến.
+
+
+# 5. Command
+![command schedule](../images/commad-schedule.png)
