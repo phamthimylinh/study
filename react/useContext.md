@@ -94,3 +94,188 @@ Giải thích:
 
 # Kết luận
 `useContext` là một công cụ mạnh mẽ trong React để quản lý và chia sẻ dữ liệu toàn cục, giúp giảm bớt sự phức tạp khi truyền props và tính năng bảo trì của mã nguồn. Nó đặc biệt hữu ích trong các ứng dụng có nhiều component cần truy cập cùng một dữ liệu như theme, auth hoặc language settings.
+
+
+# Ví dụ về các lưu ý
+## 1. Hiệu suất kém:
+Một context chữa một state lớn và thay đổi thường xuyên dẫn đến re-render không cần thiết cho tất cả component dùng Context
+```
+import { createContext, useContext, useState } from 'react';
+
+// Tạo Context
+const AppContext = createContext();
+
+function App() {
+  const [state, setState] = useState({
+    user: { name: 'John', age: 30 },
+    theme: 'light',
+    counter: 0,
+  });
+
+  // Cập nhật counter mỗi giây
+  setInterval(() => {
+    setState((prev) => ({ ...prev, counter: prev.counter + 1 }));
+  }, 1000);
+
+  return (
+    <AppContext.Provider value={state}>
+      <UserProfile />
+      <ThemeDisplay />
+    </AppContext.Provider>
+  );
+}
+
+function UserProfile() {
+  const { user } = useContext(AppContext); // Re-render mỗi giây dù không cần
+  return <div>User: {user.name}</div>;
+}
+
+function ThemeDisplay() {
+  const { theme } = useContext(AppContext); // Re-render mỗi giây dù không cần
+  return <div>Theme: {theme}</div>;
+}
+```
+**Vấn đề**:
+- Context chứa nhiều dữ liệu (user, theme, counter) trong 1 object lớn.
+- Mỗi khi counter thay đổi mỗi giây, toàn bộ state được cập nhật, khiến tất các component re-render, dù một số component chỉ cần các user hoặc theme thay đổi
+
+**good exam**
+Tách context thành các context nhỏ hơn và sử dụng `useMemo` để tránh re-render không cần thiết:
+```
+import { createContext, useContext, useState, useMemo } from 'react';
+
+// Tách thành các Context riêng
+const UserContext = createContext();
+const ThemeContext = createContext();
+const CounterContext = createContext();
+
+function App() {
+  const [user, setUser] = useState({ name: 'John', age: 30 });
+  const [theme, setTheme] = useState('light');
+  const [counter, setCounter] = useState(0);
+
+  // Cập nhật counter mỗi giây
+  setInterval(() => {
+    setCounter((prev) => prev + 1);
+  }, 1000);
+
+  // Sử dụng useMemo để đảm bảo giá trị Context không thay đổi trừ khi cần
+  const userValue = useMemo(() => ({ user, setUser }), [user]);
+  const themeValue = useMemo(() => ({ theme, setTheme }), [theme]);
+
+  return (
+    <UserContext.Provider value={userValue}>
+      <ThemeContext.Provider value={themeValue}>
+        <CounterContext.Provider value={counter}>
+          <UserProfile />
+          <ThemeDisplay />
+          <CounterDisplay />
+        </CounterContext.Provider>
+      </ThemeContext.Provider>
+    </UserContext.Provider>
+  );
+}
+
+function UserProfile() {
+  const { user } = useContext(UserContext); // Không re-render khi counter đổi
+  return <div>User: {user.name}</div>;
+}
+
+function ThemeDisplay() {
+  const { theme } = useContext(ThemeContext); // Không re-render khi counter đổi
+  return <div>Theme: {theme}</div>;
+}
+
+function CounterDisplay() {
+  const counter = useContext(CounterContext); // Chỉ re-render khi counter đổi
+  return <div>Counter: {counter}</div>;
+}
+```
+- Tách Context: mỗi loại dữ liệu (user, counter, theme) có Context riêng, nên thay đồi ở 1 context không ảnh hưởng đến context khác, 
+- Sử dụng `userMemo` đảm bảo giá trị context (userValue, themeValue) không thay đổi trừ khi user hoặc theme thực sự thay đổi, giảm re-render không cần thiết.
+
+## 2. Không lạm dụng
+- Sử dụng context cho mọi state, kể cả state cụ bộ, dẫn đến mã phức tạp và khó bảo trì
+```javascript
+import { createContext, useContext, useState } from 'react';
+
+const FormContext = createContext();
+
+function App() {
+  const [inputValue, setInputValue] = useState('');
+
+  return (
+    <FormContext.Provider value={{ inputValue, setInputValue }}>
+      <Form />
+    </FormContext.Provider>
+  );
+}
+
+function Form() {
+  return (
+    <div>
+      <InputField />
+      <SubmitButton />
+    </div>
+  );
+}
+
+function InputField() {
+  const { inputValue, setInputValue } = useContext(FormContext);
+  return (
+    <input
+      value={inputValue}
+      onChange={(e) => setInputValue(e.target.value)}
+      placeholder="Enter text"
+    />
+  );
+}
+
+function SubmitButton() {
+  const { inputValue } = useContext(FormContext);
+  return <button disabled={!inputValue}>Submit</button>;
+}
+```
+
+**Vấn đề**
+- inputValue là state cục bộ, chỉ liên quan đến component Form và các component con trực tiếp.
+- Sử dụng Context cho một state cục bộ như thế này là không cần thiết, làm mã phức tạp hơn và khó mở rộng (nếu có nhiều form, context sẽ gây xung đột)
+- Context nên dành cho dữ liệu toàn cục, không phải state cục bộ
+
+**Good example**
+Sử dụng state cục bộ trong component và truyền props khi cần.
+```
+import { useState } from 'react';
+
+function App() {
+  return <Form />;
+}
+
+function Form() {
+  const [inputValue, setInputValue] = useState('');
+
+  return (
+    <div>
+      <InputField inputValue={inputValue} setInputValue={setInputValue} />
+      <SubmitButton inputValue={inputValue} />
+    </div>
+  );
+}
+
+function InputField({ inputValue, setInputValue }) {
+  return (
+    <input
+      value={inputValue}
+      onChange={(e) => setInputValue(e.target.value)}
+      placeholder="Enter text"
+    />
+  );
+}
+
+function SubmitButton({ inputValue }) {
+  return <button disabled={!inputValue}>Submit</button>;
+}
+```
+- inputValue là state cục bộ, được quản lý trong `Form` và truyền qua prop đến `InputFild` và `SubmitButton`.
+- Không sử dụng Context, mã đơn giản, dễ hiểu và tránh được overhead không cần thiết.
+- Context chỉ nên dùng khi dữ liệu cần chia sẻ qua nhiều tầng component hoặc giữa component không liên quan trực tiếp.
