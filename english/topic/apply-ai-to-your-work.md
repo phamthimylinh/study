@@ -14,16 +14,16 @@
 - Các loại AI mà tôi thường dùng là ChatGPT, grok, cursor, windsurf..., trong tương lại tôi hi vọng sẽ được thử thêm các tính năng tuyệt vời mà AI có thể mang lại cho cuộc sống con người.
 
 # 2. writting
-hi everyone, today i will write about topic "AI in your work". I use AI every one, it makes my work and life easiler. 
-Can say that AI helps a lot in my work. As a developer, i often use AI Chatbot and AI IDE to build and develop systems.
+hi everyone, today i will write about topic "AI in your work". I use AI every day, it makes my work and life easiler. 
+i can say that AI helps me a lot in my work. As a developer, i often use AI Chatbot and AI IDE to build and develop systems.
 
-With AI chatbot, it helps explain query code, programming concepts that i don't know, and suggestions on how to solve the problem.
+With AI chatbot, it helps me explain query code, programming concepts that i don't know, and suggestions on how to solve the problem.
 Instead of wasting time researching on google and .... Thanks to AI chatbox, i can understand code and definitions quickly and systematically.
 
-Besider, with more difficult tasks that require more information processing, i use AI IDE to help me understand the systems.
+Besides, with more difficult tasks that require more information processing, i use AI IDE to help me understand the systems.
 
-From data that AI IDE analyzes and explain, i can easily complete tasks of finding and fixing errors or developing suitable function based on the old logic.
+Based on data that AI IDE analyzes and explains, i can easily complete tasks of finding and fixing errors or developing suitable function based on the old logic.
 
 Since having AI, i feel much more confident, i am not too afraid of a new definition, new problem or language.
 
-I often use ChatGPT, grok, cursor, windsurf..., In the future i hope to try many the amazing features that AI can bring to our life.
+I often use ChatGPT, grok, cursor, windsurf..., In the future i hope to try more amazing features that AI brings to our life.
