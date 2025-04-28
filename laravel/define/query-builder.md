@@ -1,4 +1,33 @@
 # 1. Giới thiệu
-- Query builder: 
+- Query builder của laravel sử dụng PDO parameter binding giúp bảo vệ các cuộc tấn công SQL injection
+
+# 2. Chạy database queries
+## 2.1 Lấy tất cả dữ liệu từ 1 bảng
+- Có thể dùng phương thức `table()` của `DB` facade để bắt đầu truy vấn
+- `table()` returns một query builder instance cho bảng được truy vấn và lấy ra kết quả bằng phương thức `get()`
+
+```php
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\View\View;
+
+class UserController extends Controller
+{
+    /**
+     * Show a list of all of the application's users.
+     */
+    public function index(): View
+    {
+        $users = DB::table('users')->get();
+
+        return view('user.index', ['users' => $users]);
+    }
+}
+```
+
+- `get()` trả về 1 instance của `Illuminate\Support\Collection` chứa kết quả của truy vấn, trong đó mỗi kết quả là một instance của PHP `stdClass` object 
 
 
