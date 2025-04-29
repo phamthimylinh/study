@@ -30,4 +30,13 @@ class UserController extends Controller
 
 - `get()` trả về 1 instance của `Illuminate\Support\Collection` chứa kết quả của truy vấn, trong đó mỗi kết quả là một instance của PHP `stdClass` object 
 
+2.2 Trả về một bản ghi dữ liệu
+- Nếu bạn cần trả về chỉ 1 dòng từ 1 bảng trong csdl, bạn có thể dùng method first() của DB facade. Phương thức này sẽ trả về một object `stdClass`
+
+```php
+$user = DB::table('users')->where('name', 'John')->first();
+
+return $user->email;
+``` 
+
 
