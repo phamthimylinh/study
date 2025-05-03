@@ -58,4 +58,39 @@ foreach ($titles as $name => $title) {
 }
 ```
 
+# Chia nhỏ từng đoạn kết quả
+- Khi làm việc với hàng ngàn bản ghi trong csdl, hãy cân nhắc sử dụng `chunk()` của `DB` facade.
+- Phương thức này lấy ra một phần nhỏ kết quả tại 1 thời điểm và đưa ra từng khối vào func closure để xử lý.
+- Ví dụ, lấy một bảng dữ liệu users theo từng phần, mỗi phần 100 record cùng một lúc
+```php
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+
+DB::table('users')->orderBy('id')->chunk(100, function (Collection $user) {
+    foreach ($users as $user) {
+        // ....
+    }
+})
+```
+- Có thể dùng xử lý chunk bằng cách return `false` từ closure func:
+```php
+DB::table('users')->orderBy('id')->chunk(100, function (Collection $users) {
+    // Process the records...
+
+    return false;
+});
+```
+- Nếu như bạn đang update dữ liệu trong khi chunk kết quả, kết quả chunk có thể trả về những dữ liệu không mong muốn -> nên sử dụng `chunkById`, phương thức này sẽ tự động phân tra kết quả dựa trên primary key:
+```php
+DB::table('users')->where('active', false)
+    ->chunkById(100, function (Collection $users) {
+        foreach ($users as $user) {
+            DB::table('users')
+                ->where('id', $user->id)
+                ->update(['active' => true]);
+        }
+    });
+```
+- Với `chunkId` và `lazyById` thêm các điều kiện `where` vào truy vấn của riêng chúng rồi
+
 
