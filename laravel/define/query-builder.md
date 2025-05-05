@@ -58,7 +58,7 @@ foreach ($titles as $name => $title) {
 }
 ```
 
-# Chia nhỏ từng đoạn kết quả
+# 3. Chia nhỏ từng đoạn kết quả
 - Khi làm việc với hàng ngàn bản ghi trong csdl, hãy cân nhắc sử dụng `chunk()` của `DB` facade.
 - Phương thức này lấy ra một phần nhỏ kết quả tại 1 thời điểm và đưa ra từng khối vào func closure để xử lý.
 - Ví dụ, lấy một bảng dữ liệu users theo từng phần, mỗi phần 100 record cùng một lúc
@@ -93,4 +93,25 @@ DB::table('users')->where('active', false)
 ```
 - Với `chunkId` và `lazyById` thêm các điều kiện `where` vào truy vấn của riêng chúng rồi
 
+# 4. Lazy method: Trả về kết quả trực tiếp lazy
+- `lazy()` làm việc tương tự `chunk()`, nghĩa là nó thực hiện truy vấn theo từng phần. 
+- Tuy nhiên, thay vì truyền vào 1 callback func, `lazy()` trả về 1 `LazyCollection`, cho phép bạn tương tác với nó như một collection bình thường.
 
+```php
+use Illuminate\Support\Facades\DB;
+
+DB::table('users')->orderBy('id')->lazy()->each(function (object $user) {
+    // ...
+});
+```
+- Tương tự như `chunk()`, nếu muốn update dữ liệu trong khi lặp dùng `lazy` thì giải pháp tốt nhất là dùng `lazyById` hoặc `lazyByIdDesc`, các phương thức này sẽ tự động phân trang kết quả dựa trên primary key
+
+```php
+DB::table('users')->where('active', false)
+    ->lazyById()->each(function (object $user) {
+            DB::table('users')
+                ->where('id', $user->id)
+                ->update(['active' => true]);
+    });
+```
+- Khi thực hiện update hoặc delete dữ liệu trong khi lặp, hay bất kỳ thay đổi nào đối với primary hoặc foreign key đều có thể ảnh hưởng đến truy vấn chunk hay lazy, dẫn đến việc bản ghi không bao gồm vào kết quả trả về
