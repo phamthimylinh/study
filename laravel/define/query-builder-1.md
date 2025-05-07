@@ -48,4 +48,38 @@ $orders = DB::table('orders')
 ```
 ### 2.1.2 `whereRaw()` & `orWhereRaw()`
 - Phương thức `whereRaw()` và `orWhereRaw()` cho phép bạn thêm một mệnh đề where raw query vào câu truy vấn của bạn.
-- 
+- Phương thức này chấp nhận một mảng làm tham số thứ 2
+```php
+$orders = DB::table('orders')
+    ->whereRaw('price > IF(state = "TX", ?, 100)', [200])
+    ->get();
+```
+### 2.1.3 `havingRaw / orHavingRaw`
+- Phương thức `havingRaw` và `orHavingRaw` cho phép cung cấp 1 raw làm giá trị cho mệnh đề "having".
+- Phương thức này chấp nhận một mảng làm tham số thứ 2 của chúng
+```php
+$orders = DB::table('orders')
+    ->select('department', DB::raw('SUM(price) as total_sales'))
+    ->groupBy('department')
+    ->havingRaw('SUM(price) > ?', [2500])
+    ->get();
+```
+
+### 2.1.4 `orderByRaw`
+- Phương thước này cung cấp 1 raw query vào mệnh đề "order by":
+```php
+$orders = DB::table('orders')
+    ->orderByRaw('updated_at - created_at DESC')
+    ->get();
+```
+
+### 2.1.5 `groupByRaw`
+- Phương thức này cung cấp 1 raw query làm giá trị cho mệnh đề "group by"
+```php
+$orders = DB::table('orders')
+    ->select('city', 'state')
+    ->groupByRaw('city, state')
+    ->get();
+```
+
+# 3. Join
