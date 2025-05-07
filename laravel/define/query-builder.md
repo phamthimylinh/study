@@ -115,3 +115,33 @@ DB::table('users')->where('active', false)
     });
 ```
 - Khi thực hiện update hoặc delete dữ liệu trong khi lặp, hay bất kỳ thay đổi nào đối với primary hoặc foreign key đều có thể ảnh hưởng đến truy vấn chunk hay lazy, dẫn đến việc bản ghi không bao gồm vào kết quả trả về
+
+# 5. Hàm tổng hợp - Aggregates
+- Query builder cũng cung cấp đa dạng các hàm cho việc lấy các giá trị tổng hợp như: count, max, min, avg , sum.
+- Có thể gọi chúng sau câu query của bạn
+```php
+use Illuminate\Support\Facades\DB;
+
+$users = DB::table('users')->count();
+
+$price = DB::table('orders')->max('price');
+```
+- Đương nhiên, bạn cũng có thể kết hợp các hàm này với các điều kiện để tinh chỉnh các giá trị của bạn để tính toán.
+```php
+$price = DB::table('orders')
+    ->where('finalized', 1)
+    ->avg('price');
+```
+- Các hàm xác định bản ghi có tồn tại hay không: 
+    - Thay vì dùng các hàm count để đếm rồi xác định ⇒ có thể dùng `exists` và `doesnExist`.
+
+```php
+if (DB::table('orders')->where('finalized', 1)->exists()) {
+    // ...
+}
+
+if (DB::table('orders')->where('finalized', 1)->doesntExist()) {
+    // ...
+}
+ ```
+ 
