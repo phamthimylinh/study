@@ -83,3 +83,61 @@ $orders = DB::table('orders')
 ```
 
 # 3. Join
+## 3.1 Inner join
+- Query builder cũng có thể dùng mệnh đề join, để thực hiện "inner join" basic, có thể dùng phương thức `join()` trên instance query builder.
+- Tham số của phương thức join là tên bảng màn bạn muốn kết nối, tham số 2 là trường kết nối của bảng, tham số 3 là biểu thức kết nối = (có thể bỏ qua - tự hiểu là =), tham số 4 là trường kết nối của bảng.
+- Có thể dùng nhiều phương thức join trên cùng 1 câu query
+```php
+use Illuminate\Support\Facades\DB;
+
+$users = DB::table('users')
+    ->join('contacts', 'users.id', '=', 'contacts.user_id')
+    ->join('orders', 'users.id', '=', 'orders.user_id')
+    ->select('users.*', 'contacts.phone', 'orders.price')
+    ->get();
+```
+
+## 3.2 Left join / right join
+- Nếu muốn thực hiện "left join" hoặc "right join" thay vì "inner join", dùng phương thức `leftJoin()` hoặc `rightJoin()`
+- 2 Phương thức này có signature giống với phương thức join
+```php
+$users = DB::table('users')
+    ->leftJoin('posts', 'users.id', '=', 'posts.user_id')
+    ->get();
+
+$users = DB::table('users')
+    ->rightJoin('posts', 'users.id', '=', 'posts.user_id')
+    ->get();
+```
+## 3.3 Cross join
+- Có thể dùng phương thức `crossJoin()` để thực hiện "cross join" (nối chéo)
+- Cross join tạo ra 1 sản phẩm thuộc phái, giữa bảng đầu tiên và bảng được ghép lại
+```php
+ $sizes = DB::table('sizes')
+    ->crossJoin('colors')
+    ->get();
+```
+
+## 3.4 Join nâng cao
+- Bạn cũng có thể chỉ định mệnh đề join nâng cao hơn
+- Bắt đầu với việc truyền 1 closure function vào tham số thứ 2 của `join()`
+- Closure sẽ nhận 1 tham số đầu vào là `JoinClause $join` của `Illuminate\Database\Query\JoinClause` cái mà cho phép bạn chỉ định các ràng buộc trên "join"
+```php
+ DB::table('users')
+    ->join('contacts', function (JoinClause $join) {
+        $join->on('users.id', '=', 'contacts.user_id')->orOn(/* ... */);
+    })
+    ->get();
+```
+- Nếu muốn dùng `where` trong khi nối, thì có thể dùng phương thức `where` hoặc `orWhere` được cung cấp từ `JoinClause`
+- Thay vì chỉ so sánh 2 cột như join mà phương pháp này sẽ so sánh thêm với 1 giá trị nữa
+```php
+ DB::table('users')
+    ->join('contacts', function (JoinClause $join) {
+        $join->on('users.id', '=', 'contacts.user_id')
+            ->where('contacts.user_id', '>', 5);
+    })
+    ->get();
+```
+
+## 3.5 Subquery join
