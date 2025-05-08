@@ -141,3 +141,37 @@ $users = DB::table('users')
 ```
 
 ## 3.5 Subquery join
+- Có thể sử dụng các phương thức joinSub, leftJoin, rightJoin để kết nối một truy vấn với sub query.
+- `joinSub` nhận vào 3 tham số: sub query, alias, closure function 
+```php 
+$latestPosts = DB::table('posts')
+    ->select('user_id', DB::raw('MAX(created_at) as last_post_created_at'))
+    ->where('is_published', true)
+    ->groupBy('user_id');
+
+$users = DB::table('users')
+    ->joinSub($latestPosts, 'latest_posts', function (JoinClause $join) {
+        $join->on('users.id', '=', 'latest_posts.user_id');
+    })->get();
+```
+
+## 3.6 Lateral Joins
+- Lateral Joins hiện được hỗ trợ với PostgreSQL, Mysql >= 8.0.14 và sql server.
+- Có thể sử dụng phương thức `joinLateral()` hoặc `leftJoinLateral()` để thực  hiện một sub query
+- Mỗi phương thức này nhận 2 đối số: sub query và table alias.
+- Điều kiện join phải được chỉ định trong `where` của sub query. Các Lateral join được đánh giá cho mỗi hàng và có thể tham chiếu đến các cột bên ngoài subquery.
+- Ví dụ: 
+    - Lấy ra thông tin user và 3 bài đăng gần nhất của từng user
+    - Mỗi user có tối đa 3 row cho mỗi bài blog gần nhất của họ
+    - Điều kiện join được chỉ định bằng `whereColumn` trong subquery, tham chiếu đến row người dùng hiện tại
+```php
+$latestPosts = DB::table('posts')
+    ->select('id as post_id', 'title as post_title', 'created_at as post_created_at')
+    ->whereColumn('user_id', 'users.id')
+    ->orderBy('created_at', 'desc')
+    ->limit(3);
+
+$users = DB::table('users')
+    ->joinLateral($latestPosts, 'latest_posts')
+    ->get();
+```
