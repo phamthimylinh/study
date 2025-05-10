@@ -175,3 +175,5 @@ $users = DB::table('users')
     ->joinLateral($latestPosts, 'latest_posts')
     ->get();
 ```
+
+# 4. Unions
