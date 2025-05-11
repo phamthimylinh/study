@@ -175,3 +175,29 @@ $users = DB::table('users')
     ->joinLateral($latestPosts, 'latest_posts')
     ->get();
 ```
+
+# 4. Unions
+- Union là một phương thức được sử dụng trong Query Builder để kết hợp kết quả của hai hoặc nhiều truy vấn SQL lại với nhau
+- đảm bảo rằng các hàng kết quả từ các truy vấn này được gộp lại thành một tập hợp duy nhất
+- Kết quả của Union sẽ loại bỏ các hàng trùng lặp
+- Nếu bạn muốn giữ lại các hàng trùng lặp, bạn có thể sử dụng unionAll.
+- Nó thường được dùng khi bạn muốn lấy dữ liệu từ nhiều bảng hoặc từ cùng một bảng với các điều kiện khác nhau, rồi gộp chúng lại thành một tập hợp kết quả duy nhất.
+```php 
+$query1 = DB::table('table1')->select('column1', 'column2');
+$query2 = DB::table('table2')->select('column1', 'column2');
+$result = $query1->union($query2)->get();
+```
+```php
+use Illuminate\Support\Facades\DB;
+
+$first = DB::table('users')
+    ->whereNull('first_name');
+
+$users = DB::table('users')
+    ->whereNull('last_name')
+    ->union($first)
+    ->get();
+```
+
+# 5. Basic where
+
