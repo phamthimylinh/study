@@ -205,5 +205,43 @@ SELECT name, email FROM admins WHERE last_name IS NULL
 ```
 
 # 5. Basic where
+## 5.1 Mệnh đề where
+- Phương thức `where()` bao gồm 3 đối số: 
++ Đối số 1: là tên cột 
++ Đối số 2: có thể là bất kỳ toán tử nào csdl hỗ trợ
++ Đối số 3: là giá trị để so sánh với giá trị cột
+```php
+$users = DB::table('users')
+    ->where('votes', '=', 100)
+    ->where('age', '>', 35)
+    ->get();
+```
+- Thông thường nếu muốn so sánh giá trị cột = 1 giá trị nhất định thì có thể bỏ bớt 1 đối số toán tử.
+- Một số ví dụ với toán tử mà được csdl cung cấp
+```php
+$users = DB::table('users')
+    ->where('votes', '>=', 100)
+    ->get();
 
+$users = DB::table('users')
+    ->where('votes', '<>', 100)
+    ->get();
 
+$users = DB::table('users')
+    ->where('name', 'like', 'T%')
+    ->get();
+```
+- Cũng có thể dùng mảng các điều kiện trong where
+```php
+$users = DB::table('users')->where([
+    ['status', '=', '1'],
+    ['subscribed', '<>', '1'],
+])->get();
+```
+- Mysql và MariaDB tự động chuyển kiểu chuỗi thành số nguyên trong các phép so sánh chuỗi số, trong quá trình này các chuỗi không phải số được chuyển thành 0 => điều này có thể dẫn đến kết quả không mong muốn 
+- ví dụ
+```php
+// secret có giá trị là aaa
+User::where('secret', 0)
+// vẫn return ra kết quả
+```
