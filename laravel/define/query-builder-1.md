@@ -198,6 +198,12 @@ $users = DB::table('users')
     ->union($first)
     ->get();
 ```
+```sql
+SELECT name, email FROM users WHERE first_name IS NULL
+UNION
+SELECT name, email FROM admins WHERE last_name IS NULL
+```
 
 # 5. Basic where
+
 
