@@ -245,3 +245,31 @@ $users = DB::table('users')->where([
 User::where('secret', 0)
 // vẫn return ra kết quả
 ```
+
+## 5.2 Mệnh đề whereOr
+- Khi dùng `where` các mệnh đề sẽ nối với nhau bằng toán tử `and`, do đó có thể dùng `orWhere` để nối các điều kiện truy vấn bằng toán tử `or`
+- Các đối số của phương thức `orWhere` giống với `where`
+```php
+$users = DB::table('users')
+    ->where('votes', '>', 100)
+    ->orWhere('name', 'John')
+    ->get(); 
+```
+- Nếu cần gom nhóm điều kiện hoặc trong dấu ngoặc đơn hoặc clourse func
+```php
+use Illuminate\Database\Query\Builder;
+
+$users = DB::table('users')
+    ->where('votes', '>', 100)
+    ->orWhere(function (Builder $query) {
+        $query->where('name', 'Abigail')
+            ->where('votes', '>', 50);
+        })
+    ->get();
+```
+Nó sẽ tương đương với cấu SQL dưới đây
+```
+select * from users where votes > 100 or (name = 'Abigail' and votes > 50)
+```
+
+## 5.3 Mệnh đề where not
