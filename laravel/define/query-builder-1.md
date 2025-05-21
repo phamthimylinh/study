@@ -410,3 +410,35 @@ WHERE published = true AND NOT (
 ```
 
 # 6. JSON where clauses
+- Laravel cũng hỗ trợ truy vấn dữ liệu json của các cột có chứa kiểu dữ liệu này (csdl)
+- Hiện nay có MariaDB 10.3+, MySql 8.0+, postgreSQL 12.0+, SQL Server 2017+ và SQLite 3.39.0+
+- Để truy vấn các cột dl có kiểu json dùng toán tử `->`
+```php
+$users = DB::table('users')
+    ->where('preferences->dining->meal', 'salad')
+    ->get();
+```
+- Cũng có thể truy vấn chứa thay vì =
+```php
+$users = DB::table('users')
+    ->whereJsonContains('options->languages', 'en')
+    ->get();
+```
+- Nếu dùng hệ quản trị csdl MariaDB, MySql, hoặc PostgreSQL, bạn có thể truyền vào một mảng giá trị khi dùng `whereJsonContains`
+```php
+$users = DB::table('users')
+    ->whereJsonContains('options->languages', ['en', 'de'])
+    ->get();
+```
+- Cũng có thể dùng phương thức `whereJsonLength` để truy vấn mảng json theo length
+```php
+$users = DB::table('users')
+    ->whereJsonLength('options->languages', 0)
+    ->get();
+
+$users = DB::table('users')
+    ->whereJsonLength('options->languages', '>', 1)
+    ->get();
+```
+
+# 7. Các mệnh đề where bổ xung
