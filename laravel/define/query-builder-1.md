@@ -442,3 +442,43 @@ $users = DB::table('users')
 ```
 
 # 7. Các mệnh đề where bổ xung
+## 7.1 whereLike / orWhereLike / whereNotLike / orWhereNotLike
+- Phương thức `whereLike` cho phép thêm mệnh đề `LIKE` vào trong câu truy vấn
+- Phương thức này cung cấp một cách không phụ thuộc vào csdl để thực hiện khớp chuỗi, và khả năng chuyển đổi phân biệt hoa thường, default là không phân biệt hoa thường
+```php
+ $users = DB::table('users')
+    ->whereLike('name', '%John%')
+    ->get();
+```
+- Để phân biệt hoa thường thì bật đối số `caseSensitive`
+```php
+$users = DB::table('users')
+    ->whereLike('name', '%John%', caseSensitive: true)
+    ->get();
+```
+
+- Phương thức `orWhereLike` dùng để thêm mệnh đề "or" vào trong điều truy vấn
+```php
+$users = DB::table('users')
+    ->where('votes', '>', 100)
+    ->orWhereLike('name', '%John%')
+    ->get();
+```
+
+- Cũng tương tự thế phương thức `orWhereLike` cho phép thêm "NOT LIKE" vào điều kiện
+```php
+$users = DB::table('users')
+    ->whereNotLike('name', '%John%')
+    ->get();
+```
+
+- Phương thức `orWhereNotLike` thêm "or" và "NOT LIKE" vào điều kiện 
+```php
+ $users = DB::table('users')
+    ->where('votes', '>', 100)
+    ->orWhereNotLike('name', '%John%')
+    ->get();
+```
+- Lưu ý `whereLike` với option phân biệt hoa thường đang không hỗ trợ trên hệ quản trị csdl SQL Server.
+
+## 7.2 whereIn / whereNotIn / orWhereIn / orWhereNotIn
