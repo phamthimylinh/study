@@ -482,3 +482,23 @@ $users = DB::table('users')
 - Lưu ý `whereLike` với option phân biệt hoa thường đang không hỗ trợ trên hệ quản trị csdl SQL Server.
 
 ## 7.2 whereIn / whereNotIn / orWhereIn / orWhereNotIn
+- Phương thức `whereIn` xác định rằng một cột có phải nằm trong một mảng giá trị nhất định hay không
+```php
+$users = DB::table('users')
+    ->whereIn('id', [1, 2, 3])
+    ->get();
+```
+- Phương thức `whereNotIn` xác định rằng một cột không nằm trong một mảng giá trị nhất định
+```php
+$users = DB::table('users')
+    ->whereNotIn('id', [1, 2, 3])
+    ->get();
+```
+- Cũng có thể dùng truy vấn vào tham số thứ hai của  `whereIn` và `whereNotIn`
+```php
+$activeUsers = DB::table('users')->select('id')->where('is_active', 1);
+
+$users = DB::table('comments')
+    ->whereIn('user_id', $activeUsers)
+    ->get();
+```
