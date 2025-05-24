@@ -494,7 +494,7 @@ $users = DB::table('users')
     ->whereNotIn('id', [1, 2, 3])
     ->get();
 ```
-- Cũng có thể dùng truy vấn vào tham số thứ hai của  `whereIn` và `whereNotIn`
+- Cũng có thể dùng truy vấn vào tham số thứ hai của  `whereIn` và `whereNotIn` chứ không chỉ là một mảng value
 ```php
 $activeUsers = DB::table('users')->select('id')->where('is_active', 1);
 
@@ -502,3 +502,44 @@ $users = DB::table('comments')
     ->whereIn('user_id', $activeUsers)
     ->get();
 ```
+- Câu SQL tương tự như sau
+```
+select * from comments where user_id in (
+    select id
+    from users
+    where is_active = 1
+)
+```
+- Bên cạnh đó cũng có thể dùng `whereIntegerInRaw` hay `whereIntegerNotInRaw` trong trường hợp mảng giá trị truy vấn lớn giúp giảm bộ nhớ
+
+## 7.3 whereBetween / orWhereBetween
+- Phương thức `whereBetween` xác định các bản ghi có giá trị của 1 cột nằm giữa khoảng giá trị:
+```php
+$users = DB::table('users')
+    ->whereBetween('votes', [1, 100])
+    ->get();
+```
+
+## 7.4 whereNotBetween / orWhereNotBetween
+- Phương thức `whereNotBetween` xác định rằng giá trị của 1 cột có nằm ngoài khoảng 2 giá trị không
+```php
+$users = DB::table('users')
+    ->whereNotBetween('votes', [1, 100])
+    ->get();
+```
+
+## 7.5 whereBetweenColumns / whereNotBetweenColumns / orWhereBetweenColumns / orWhereNotBetweenColumns
+- Phương thức `whereBetweenColumns` xác định giá trị của 1 cột có nằm giữa giá trị của 2 cột khác trong cùng 1 bảng không
+```php
+$patients = DB::table('patients')
+    ->whereBetweenColumns('weight', ['minimum_allowed_weight', 'maximum_allowed_weight'])
+    ->get();
+```
+- Phương thức `whereNotBetweenColumns` xác định giá trị 1 cột có nằm ngoài giá trị của 2 cột cùng trong 1 bảng không
+```php
+$patients = DB::table('patients')
+    ->whereNotBetweenColumns('weight', ['minimum_allowed_weight', 'maximum_allowed_weight'])
+    ->get();
+```
+
+## 7.6 whereNull / whereNotNull / orWhereNull / orWhereNotNull
