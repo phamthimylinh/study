@@ -543,3 +543,49 @@ $patients = DB::table('patients')
 ```
 
 ## 7.6 whereNull / whereNotNull / orWhereNull / orWhereNotNull
+- Phương thức `whereNull` xác định rằng 1 cột có giá trị null hay không?
+```php
+$users = DB::table('users')
+    ->whereNull('updated_at')
+    ->get();
+```
+- Phương thức `whereNotNull` xác định rằng giá trị của cột không null
+```php
+$users = DB::table('users')
+    ->whereNotNull('updated_at')
+    ->get();
+```
+
+## 7.7 whereDate / whereMonth / whereDay / whereYear / whereTime
+- Phương thức `whereDate` có thể được dùng để so sánh giá trị của 1 cột với 1 ngày
+```php
+$users = DB::table('users')
+    ->whereDate('created_at', '2016-12-31')
+    ->get();
+```
+- Phương thức `whereMonth` phương thức này có thể được sử dụng để sử dụng để so dánh giá trị của một cột với 1 tháng cụ thể
+```php
+$users = DB::table('users')
+    ->whereMonth('created_at', '12')
+    ->get();
+```
+- Phương thức `whereDay` dùng để so sánh giá trị của một cột với một ngày cụ thể trong tháng
+```php
+$users = DB::table('users')
+    ->whereDay('created_at', '31')
+    ->get();
+```
+- Phương thức `whereYear` dùng để so sánh giá trị của 1 cột với 1 năm cụ thể
+```php
+$users = DB::table('users')
+    ->whereYear('created_at', '2016')
+    ->get();
+```
+- Phương thức `whereTime` dùng để so sánh giá trị cột với 1 thời gian cụ thể
+```php
+$users = DB::table('users')
+    ->whereTime('created_at', '=', '11:20:45')
+    ->get();
+```
+
+## 7.8 wherePast / whereFuture / whereToday / whereBeforeToday / whereAfterToday
