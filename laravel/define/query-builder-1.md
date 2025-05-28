@@ -589,3 +589,58 @@ $users = DB::table('users')
 ```
 
 ## 7.8 wherePast / whereFuture / whereToday / whereBeforeToday / whereAfterToday
+- Phương thức `wherePass` và `whereFuture` có thể dùng để xác định xem giá trị của một cột là ở quá khứ hay ở tương lai
+```php
+$invoices = DB::table('invoices')
+    ->wherePast('due_at')
+    ->get();
+
+$invoices = DB::table('invoices')
+    ->whereFuture('due_at')
+    ->get();
+```
+- Phương thức `whereNowOrPass` và `whereNowOrFuture` để có thể sử dụng xác định xem giá trị của một cột là ở quá khứ hay tương lai, bao gồm cả ngày và giờ hiện tại
+```php
+$invoices = DB::table('invoices')
+    ->whereNowOrPast('due_at')
+    ->get();
+
+$invoices = DB::table('invoices')
+    ->whereNowOrFuture('due_at')
+    ->get();
+```
+- Phương thức `whereToday` và `whereAfterToday` xác định 1 cột có giá trị là ngày hôm nay, trước hay sau ngày hôm nay
+```php
+$invoices = DB::table('invoices')
+    ->whereToday('due_at')
+    ->get();
+
+$invoices = DB::table('invoices')
+    ->whereBeforeToday('due_at')
+    ->get();
+
+$invoices = DB::table('invoices')
+    ->whereAfterToday('due_at')
+    ->get();
+```
+## 7.9 whereColumn / orWhereColumn
+- Phương thức `whereCoumn` có thể được sử dụng để xác định rằng 2 cột có bằng nhau hay không
+```php
+$users = DB::table('users')
+    ->whereColumn('first_name', 'last_name')
+    ->get();
+```
+- Và cũng có thể truyền vào toán tử so sánh
+```php
+$users = DB::table('users')
+    ->whereColumn('updated_at', '>', 'created_at')
+    ->get();
+```
+- Có thể truyền vào 1 mảng các cột trong phương thức `whereColumn`, các điều kiện này sẽ được nối với nhau bằng toán tử and
+```php
+$users = DB::table('users')
+    ->whereColumn([
+        ['first_name', '=', 'last_name'],
+        ['updated_at', '>', 'created_at'],
+    ])->get();
+```
