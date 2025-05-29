@@ -644,3 +644,21 @@ $users = DB::table('users')
         ['updated_at', '>', 'created_at'],
     ])->get();
 ```
+- Đôi khi chúng ta cần gom nhóm các mệnh đề `where` trong dấu ngoặc đơn để đạt được mục đích truy vấn.
+và trong thực tế bạn muốn gom nhóm các mệnh để `orWhere` để tránh các hành vi truy vấn không mong muốn, để thực hiện điều này chúng ta truyền vào 1 closure và phương thức `where`
+```php
+$users = DB::table('users')
+    ->where('name', '=', 'John')
+    ->where(function (Builder $query) {
+        $query->where('votes', '>', 100)
+            ->orWhere('title', '=', 'Admin');
+    })
+    ->get();
+```
+- Việc truyền vào 1 closure vào phương thức where sẽ hướng dẫn query builder bắt đầu với 1 nhóm truy vấn ràng buộc
+- Hàm closure sẽ nhận một quiery builder, mà bạn có thể dùng để thiết lập các ràng buộc cần được chứa trong dấu ()
+- ví dụ câu sql tương tự
+```
+select * from users where name = 'John' and (votes > 100 or title = 'Admin')
+```
+- Bạn nên luôn gom nhóm các `orWhere` để tránh trả về kết quả không mong muốn khi áp dụng phạm vi toàn cục
