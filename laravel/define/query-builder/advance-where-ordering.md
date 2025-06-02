@@ -71,3 +71,51 @@ $users = DB::table('users')
 
 # Ordering, grouping, limit and offset
 ## 1. Ordering
+### 1.1 Phương thức `orderBy`
+- Phương thức `orderBy` cho phép bạn sắp xếp kết quả truy vấn theo một cột nhất định.
+- Đối số đầu tiên của phương thức `orderBy` chỉ chấp nhận tên cột mà bạn muốn sắp xếp, trong khi đối số thứ 2 xác định hướng sắp xếp có thể là tăng hoặc giảm dần
+```php
+$users = DB::table('users')
+    ->orderBy('name', 'desc')
+    ->get();
+```
+- Để sắp xếp theo nhiều cột, bạn chỉ cần gọi `orderBy` nhiều lần
+```php
+$users = DB::table('users')
+    ->orderBy('name', 'desc')
+    ->orderBy('email', 'asc')
+    ->get();
+```
+
+### 1.2 Phương thức `lastest` và `oldest`
+- Phương thức `lastest` và `oldest` cho phép bạn dễ dàng sắp xếp kết quả theo ngày.
+- Mặc định, kết quả sẽ trả về được sắp xếp theo cột `created_at`. Hoặc bạn có thể truyền theo tên cột mà bạn muốn sắp xếp theo.
+```php
+$user = DB::table('users')
+    ->latest()
+    ->first();
+```
+
+### 1.3 Random ordering
+- Phương thức `inRandomOrder` có thể được sử dụng để sắp xếp ngẫu nhiên kết quả truy vấn. Ví dụ, bạn có thể sử dụng phương thức này để lấy ngẫy nhiên 1 nguời dùng
+```php
+$randomUser = DB::table('users')
+    ->inRandomOrder()
+    ->first();
+```
+
+### 1.4 Removing Existing Orderings
+- Phương thức `reorder` xóa tất cả các mệnh đề "order by" đã được áp dụng trước đó
+```php
+$query = DB::table('users')->orderBy('name');
+
+$unorderedUsers = $query->reorder()->get();
+```
+- Bạn có thể truyền 1 cột và redirect khi gọi phương thức `reorder` để xóa tất cả các mệnh đề  "order by" và áp dụng một thứ tự mới cho truy vấn
+```php
+$query = DB::table('users')->orderBy('name');
+
+$usersOrderedByEmail = $query->reorder('email', 'desc')->get();
+```
+
+### 2. Grouping
