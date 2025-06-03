@@ -146,4 +146,14 @@ $users = DB::table('users')
 - Để xây dựng moojg mệnh đề `having` nâng cao hơn, hãy tìm hiểu phương thức `havingRaw`.
 
 ### 2.2 Limit và Offset
-
+- Phương thức `skip` và `take` dùng để giới hạn kết quả trả về từ truy vấn hoặc bỏ qua một số lượng kết quả nhất định trong query
+```php
+$users = DB::table('users')->skip(10)->take(5)->get();
+```
+- Ngoài ra, có thể sử dụng phương thức `limit` hoặc `offset`, 2 phương thức này tương tự như `skip` và `take`
+```php
+$users = DB::table('users')
+    ->offset(10)
+    ->limit(5)
+    ->get();
+```
