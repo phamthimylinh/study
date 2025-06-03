@@ -118,4 +118,32 @@ $query = DB::table('users')->orderBy('name');
 $usersOrderedByEmail = $query->reorder('email', 'desc')->get();
 ```
 
-### 2. Grouping
+## 2. Grouping
+### 2.1 Phương thức `groupBy` và phương thức `having`
+- Phương thức `groupBy` và phương thức `having` có thể được sử dụng để nhóm các kết quả truy vấn
+- Phương thức `having` tương tự như phương thức `where`
+```php
+$users = DB::table('users')
+    ->groupBy('account_id')
+    ->having('account_id', '>', 100)
+    ->get();
+```
+- Có thể sử dụng phương thức `havingBetween` để lọc kết quả trong một phạm vi nhất định
+```php
+$report = DB::table('orders')
+    ->selectRaw('count(id) as number_of_orders, customer_id')
+    ->groupBy('customer_id')
+    ->havingBetween('number_of_orders', [5, 15])
+    ->get();
+```
+- Bạn có thể truyền nhiều đối số cho phương thức `groupBy` để nhóm theo nhiều cột
+```php
+$users = DB::table('users')
+    ->groupBy('first_name', 'status')
+    ->having('account_id', '>', 100)
+    ->get();
+```
+- Để xây dựng moojg mệnh đề `having` nâng cao hơn, hãy tìm hiểu phương thức `havingRaw`.
+
+### 2.2 Limit và Offset
+
