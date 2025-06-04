@@ -27,3 +27,46 @@ $users = DB::table('users')
     })
     ->get();
 ```
+# 2. Insert statements
+- query builder cũng cung cấp một phương thức `insert` cái mà dùng để chèn nhiều bản ghi vào trong bảng của csdl
+- Phương thức `insert` method chấp nhận 1 mảng các tên cột và các giá trị;
+```php
+DB::table('users')->insert([
+    'email' => 'kayla@example.com',
+    'votes' => 0
+]);
+```
+- Bạn có thể chèn nhiều bản ghi cùng một lúc bằng các truyền một mảng các mảng, mỗi mảng đại diện cho 1 bản ghi cái mà cần được chèn vào bảng
+```php
+DB::table('users')->insert([
+    ['email' => 'picard@example.com', 'votes' => 0],
+    ['email' => 'janeway@example.com', 'votes' => 0],
+]);
+```
+- Phương thức `insertOrIgnore` sẽ bỏ qua các lỗi khi chèn bản ghi vào csdl. Khi dùng phương thức này, bạn nên biết reawfng rỗi bản ghi trùng lặp sẽ bị bỏ qua và các loại lỗi kháccuxng có thể bị bỏ qua tuỳ thuộc vào công cụ csdl.
+- Ví dụ phương thức `insertOrIgnore` sẽ bỏ qua chế độ `MySQL's strict mode`
+```php
+DB::table('users')->insertOrIgnore([
+    ['id' => 1, 'email' => 'sisko@example.com'],
+    ['id' => 2, 'email' => 'archer@example.com'],
+]);
+```
+
+- Phương thức `inserUsing` sẽ chèn các bản ghi mới vào trong khi sử dụng truy vấn phụ để xác định dữ liệu cần chèn
+```php
+DB::table('pruned_users')->insertUsing([
+    'id', 'name', 'email', 'email_verified_at'
+], DB::table('users')->select(
+    'id', 'name', 'email', 'email_verified_at'
+)->where('updated_at', '<=', now()->subMonth()));
+```
+## Auto-Increamenting IDs
+Nếu bảng có id tự động tăng, hãy sử dụng phương thức `insertGetId` để chèn bản ghi và sau đó trả về id"
+```php
+$id = DB::table('users')->insertGetId(
+    ['email' => 'john@example.com', 'votes' => 0]
+);
+```
+- Khi dùng PostgreSql, phương thức `insertGetId` mong đợi cột tự động tăng và được đặt tên là id, nếu bạn muốn lấy id từ 1 chuỗi khác, bạn có thể truyền tên cột làm thao số thứ 2 cho phương thức `insertGetId`
+
+# Upsert
