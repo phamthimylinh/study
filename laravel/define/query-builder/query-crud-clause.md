@@ -69,4 +69,22 @@ $id = DB::table('users')->insertGetId(
 ```
 - Khi dùng PostgreSql, phương thức `insertGetId` mong đợi cột tự động tăng và được đặt tên là id, nếu bạn muốn lấy id từ 1 chuỗi khác, bạn có thể truyền tên cột làm thao số thứ 2 cho phương thức `insertGetId`
 
-# Upsert
+## Upsert
+- Phương thức `upsert` sẽ thêm mới các bản ghi chưa tồn tại và cập nhật các bản ghi đã tồn tại mà bạn chỉ định
+- Tham số đầu tiên của phương thức bao gồm các giá trị để chèn hoặc cập nhật, trong khi tham số thứ 2 là danh sách các cột xác định tính unique của các bản ghi trong bảng liên kết.
+Tham số thứ 3 (tham số cuối) là một mảng các cột cần cập nhật (nếu bản ghi khớp và đã tồn tại trong csdl)
+```php
+DB::table('flights')->upsert(
+    [
+        ['departure' => 'Oakland', 'destination' => 'San Diego', 'price' => 99],
+        ['departure' => 'Chicago', 'destination' => 'New York', 'price' => 150]
+    ],
+    ['departure', 'destination'],
+    ['price']
+);
+```
+- Ở ví dụ bên trên, Laravel sẽ cố gắng chèn 2 bản ghi, nếu một bản ghi đã tồn tại với cùng giá trị của cả 2 cột `departure` và `destination`, laravel sẽ update bản ghi đó với giá trị cột "price"
+
+- Lưu ý: Tất cả các csdl ngoại trừ SQL server đều yêu cầu đối số thứ 2 trong phương thức `upsert` là phải có một chỉ mục "primary" hoặc "unique". Ngoài ra MariaDB và MySql bỏ qua đối số thứ 2 của phương thức `upsert` và luôn sử dụng chỉ mục "primary" và "unique" của bảng để pháp hiện các bản ghi tồn tại
+
+# 3. Update statements
