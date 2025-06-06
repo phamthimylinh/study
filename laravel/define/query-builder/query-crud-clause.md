@@ -88,3 +88,12 @@ DB::table('flights')->upsert(
 - Lưu ý: Tất cả các csdl ngoại trừ SQL server đều yêu cầu đối số thứ 2 trong phương thức `upsert` là phải có một chỉ mục "primary" hoặc "unique". Ngoài ra MariaDB và MySql bỏ qua đối số thứ 2 của phương thức `upsert` và luôn sử dụng chỉ mục "primary" và "unique" của bảng để pháp hiện các bản ghi tồn tại
 
 # 3. Update statements
+Ngoài việc chèn các bản ghi vào csdl, query builder cũng có thể update các bản ghi hiện có bằng phương thức `update`.
+Phương thức `update` giống như các phương pháp chèn, chấp nhận một mảng các cặp (cột và giá trị) cần cập nhật, và trả về các cột đã cập nhật.
+Bạn có thể hạn chế truy cập bằng cách sử dụng mệnh đề `where`
+```php
+$affected = DB::table('users')
+    ->where('id', 1)
+    ->update(['votes' => 1]);
+```
+## 3.1 update or insert
