@@ -97,3 +97,62 @@ $affected = DB::table('users')
     ->update(['votes' => 1]);
 ```
 ## 3.1 update or insert
+- Đôi khi bạn cần update 1 bản ghi trong csdl hoặc tạo mới nó nếu nó không tồn tại => phương thức `updateOrInsert` có thể được sử dụng
+- Phương thức `updateOrInsert` chấp nhận 2 đối số: 1 mảng các điều kiện để tìm ra bản ghi và 1 mảng các cặp key value cần update
+
+- Phương thức `updateOrInsert` sẽ cố gắng tìm bản ghi phù hợp trong csdl bằng cách dùng các cặp giá trị của đối số đầu tiên. Nếu có bản ghi tồn tại, nó sẽ update với các giá trị ở đối số thứ 2. Nếu không tìm thấy bản ghi, một bản ghi mới sẽ được thêm với các thuộc tính của đối số thứ 2
+
+```php
+DB::table('users')
+    ->updateOrInsert(
+        ['email' => 'john@example.com', 'name' => 'John'],
+        ['votes' => '2']
+    );
+```
+- Bạn có thể cung cấp 1 hàm closure cho phương thức `updateOrInsert` để tuỳ chỉnh các thuộc tính cái mà được cập nhật hoặc chèn vào csdl dựa trên sự tồn tại của 1 bản ghi khớp
+```php
+DB::table('users')->updateOrInsert(
+    ['user_id' => $user_id],
+    fn ($exists) => $exists ? [
+        'name' => $data['name'],
+        'email' => $data['email'],
+    ] : [
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'marketable' => true,
+    ],
+);
+```
+
+## 3.2 Updating JSON columns
+- Khi cập nhật một cột JSON, bạn nên sử dụng cú pháp `->` để cập nhật khoá thích hợp trong đối tượng JSON. Hành động này được hỗ trợ trên MariaDB 10.2+, MySQL 5.7 và PostGreSql 9.5+
+```php
+$affected = DB::table('users')
+    ->where('id', 1)
+    ->update(['options->enabled' => true]);
+```
+### 3.2.1 Increment and Decrement
+- query builder cũng cung cấp các phương thức để tự động tăng hoặc giảm giá trị của cột nhất định, Cả hai phương thức này đều chấp nhận ít nhất 1 đối số là cột cần tăng hoặc giảm, đối số thứ 2 là để chỉ định số lượng cột cần tăng hoặc giảm  
+
+```php
+DB::table('users')->increment('votes');
+
+DB::table('users')->increment('votes', 5);
+
+DB::table('users')->decrement('votes');
+
+DB::table('users')->decrement('votes', 5);
+```
+- Nếu cần , bạn cũng có thể chỉ định các cột bổ sung để cập nhật giá trị trong quá trình tăng hoặc giảm
+```php
+DB::table('users')->increment('votes', 1, ['name' => 'John']);
+```
+- ngoài ra, bạn có thể tăng hoặc giảm nhiều cột cùng lúc bằng cách sử dụng phương thức `incrementEach` và `decrementEach`
+```php
+DB::table('users')->incrementEach([
+    'votes' => 5,
+    'balance' => 100,
+]);
+```
+
+# 4. Delete Statements
