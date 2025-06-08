@@ -132,7 +132,7 @@ $affected = DB::table('users')
     ->update(['options->enabled' => true]);
 ```
 ### 3.2.1 Increment and Decrement
-- query builder cũng cung cấp các phương thức để tự động tăng hoặc giảm giá trị của cột nhất định, Cả hai phương thức này đều chấp nhận ít nhất 1 đối số là cột cần tăng hoặc giảm, đối số thứ 2 là để chỉ định số lượng cột cần tăng hoặc giảm  
+- query builder cũng cung cấp các phương thức để tăng hoặc giảm giá trị của cột nhất định, Cả hai phương thức này đều chấp nhận ít nhất 1 đối số là cột cần tăng hoặc giảm, đối số thứ 2 là để chỉ định số lượng cột cần tăng hoặc giảm  
 
 ```php
 DB::table('users')->increment('votes');
@@ -154,5 +154,18 @@ DB::table('users')->incrementEach([
     'balance' => 100,
 ]);
 ```
+**Note**:
+- Hai phương thương thức này chỉ áp dụng cho các cột có kiểu dữ liệu `interger`, `float`, `decimal`
+- đối số: 
++ 1 là cột cần tăng hoặc giảm
++ 2 là số lượng tăng hoặc giảm
++ 3 là mảng các cột khác muốn cập nhật cùng lúc
 
 # 4. Delete Statements
+- Phương thức `delete` của query builder có thể được dùng để xoá các cột trong bảng, phương thức `delete` trả về số lượng row bị ảnh hưởng,
+- Bạn có thể hạn chế câu lệnh `delete` bằng việc gọi thêm `where` trước khi `delete`
+```php
+$deleted = DB::table('users')->delete();
+
+$deleted = DB::table('users')->where('votes', '>', 100)->delete();
+```
