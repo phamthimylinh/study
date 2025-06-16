@@ -25,4 +25,16 @@ DB_FOREIGN_KEYS=false
 - Note: mặc định laravel dùng SQLite để làm csdl, và sẽ sinh ra file database/database.sqlite.
 
 ## 2 Microsoft SQL Server configuration
+- Để sử dụng csdl Microsoft Sql server, bạn phải đảm bảo rằng mình đã cài đặt php extension `pdo_sqlsrv` và `sqlsrv` cũng như tất cả các phụ thuộc vào Microsoft SQL ODBC yêu cầu
 
+### Configuration Using URLs
+- Thông thường, kết nối với csdl được cấu hình bằng nhiều giá trị như `host, database, username, password` etc,
+- Mỗi giá trị cấu hình này đều có biến env riêng. Điều này có ý nghĩa là khi cấu hình thông tin kết nối csdl của bạn trên máy chủ và bạn cần quản lý biến môi trường
+- Một số hệ quản trị csdl được quản lý như AWS và Heroku cung cấp 1 url csdl duy nhất chứa tất cả các thông tin kết nối trong 1 chuỗi duy nhất.
+```php
+mysql://root:password@127.0.0.1/forge?charset=UTF-8
+```
+- Các Url này sẽ tuân thủ theo quy ước chuẩn
+```php
+driver://username:password@host:port/database?options
+```
