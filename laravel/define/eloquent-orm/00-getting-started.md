@@ -38,3 +38,52 @@ mysql://root:password@127.0.0.1/forge?charset=UTF-8
 ```php
 driver://username:password@host:port/database?options
 ```
+# Generating Model Classes
+- Để bắt đầu, hãy tạo ra một eloquent model. Các models thường nằm trong thư mục `app/Models` và mở trộng `Illuminate\Database\Eloquent\Model` class.
+- Bạn có thể dùng `make:model` để tạo ra một model mới
+```php
+ php artisan make:model Flight
+```
+- Nếu như bạn muốn tạo ra một database migration khi tạo ra model, bạn có thể dùng `--migration` hoặc `-m` option
+```php
+php artisan make:model Flight --migration
+```
+- Bạn có thể tạo nhiều loại class khác nhau khi tạo ra model, chẳng hạn như factories, seeders, policies, controllers, form request.
+- Ngoài ra bạn có tạo nhiều lớp cùng 1 lúc
+```php
+ # Generate a model and a FlightFactory class...
+php artisan make:model Flight --factory
+php artisan make:model Flight -f
+
+# Generate a model and a FlightSeeder class...
+php artisan make:model Flight --seed
+php artisan make:model Flight -s
+
+# Generate a model and a FlightController class...
+php artisan make:model Flight --controller
+php artisan make:model Flight -c
+
+# Generate a model, FlightController resource class, and form request classes...
+php artisan make:model Flight --controller --resource --requests
+php artisan make:model Flight -crR
+
+# Generate a model and a FlightPolicy class...
+php artisan make:model Flight --policy
+
+# Generate a model and a migration, factory, seeder, and controller...
+php artisan make:model Flight -mfsc
+
+# Shortcut to generate a model, migration, factory, seeder, policy, controller, and form requests...
+php artisan make:model Flight --all
+php artisan make:model Flight -a
+
+# Generate a pivot model...
+php artisan make:model Member --pivot
+php artisan make:model Member -p
+```
+## Inspecting models
+- Đôi khi, việc xác định tất cả các thuộc tính và các relation có sẵn của 1 model chỉ bằng cách lướt qua code của model có thể là rất khó khăn.
+- Thay vào đó, hãy thử dùng lệnh `model:show` lệnh này cung cấp cái nhìn tổng quan thuận tiện về tất cả các thuộc tính và mối quan của mô hình
+```php
+ php artisan model:show Flight
+```
