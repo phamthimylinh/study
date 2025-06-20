@@ -89,5 +89,64 @@ class Flight extends Model
 - Tuy nhiên, bạn có thể tự do thêm trong csdl
 
 ## 2. UUID and ULID key
+- Thay vì dùng số nguyên tự động tăng bạn có thể dùng UUID để làm khóa chính, nó là mã định danh bao gồm số và chữ có độ dài 36 ký tự duy nhát trên toàn cầu
+- Nếu bạn muốn dùng UUID để làm khóa chính thay vì số tự động tăng, bạn cần dùng `Illuminate\Database\Eloquent\Concerns\HasUuids` trait trên model. Tất nhiên bạn phải đảm bảo rằng mô hình có cột khóa chính tương đương với UUID column.
+```php
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Model;
 
+class Article extends Model
+{
+    use HasUuids;
 
+    // ...
+}
+
+$article = Article::create(['title' => 'Traveling to Europe']);
+
+$article->id; // "8f8e8478-9035-4d23-b9a7-62f4d2612ce5"
+```
+- Theo mặc định, đặc điểm của `HasUuids` sẽ tạo ra UUID có thứ tự cho model của bạn, các UUID này có hiệu quả hơn cho việc lưu trữ csdl được lập chỉ mục vì chúng có thể sắp xếp theo tứ tự từ điển.
+
+- Bạn có thể ghi đè quy trình tạo UUID cho một model nhất định bằng cách xác định phương thức `newUniqueId` trên model đó. Ngoài ra, bạn có thể chỉ định cột nào sẽ nhận UUID bằng cách xác định phương thức `uniqueIds` trên model
+
+```php
+use Ramsey\Uuid\Uuid;
+
+/**
+ * Generate a new UUID for the model.
+ */
+public function newUniqueId(): string
+{
+    return (string) Uuid::uuid4();
+}
+
+/**
+ * Get the columns that should receive a unique identifier.
+ *
+ * @return array<int, string>
+ */
+public function uniqueIds(): array
+{
+    return ['id', 'discount_code'];
+}
+```
+- Nếu muốn, bạn có thể chọn sử dụng "ULID" thay vì UUID, ULID tương tự như UUID. Tuy nhiên, chúng chỉ 26 ký tự, giống như UUID có thứ tự, ULID có thể sắp xếp theo thứ tự từ điển để lập chỉ mục cơ sở dữ liệu hiểu quả.
+- Để sử dụng ULID, bạn nên sử dụng `Illuminate\Database\Eloquent\Concerns\HasUlids` trait trong model của bạn, bạn cũng nên đảm bảo rằng model của bạn có cột khóa chính tương đương ULID
+```php
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Model;
+
+class Article extends Model
+{
+    use HasUlids;
+
+    // ...
+}
+
+$article = Article::create(['title' => 'Traveling to Asia']);
+
+$article->id; // "01gd4d3tgrrfqeda94gdbtdk5c"
+```
+
+## 3. Timestamps
